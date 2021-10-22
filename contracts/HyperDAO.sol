@@ -1,7 +1,8 @@
 pragma solidity 0.8.9;
 
-import "./interface/Safe.sol";
+import "./interface/ISafe.sol";
 import "@gnosis.pm/safe-contracts/contracts/interfaces/ISignatureValidator.sol";
+import "./interface/IGnosisSafeProxyFactory.sol";
 
 contract HyperDAO is ISignatureValidator {
 
