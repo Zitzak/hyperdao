@@ -5,9 +5,6 @@ import "@gnosis.pm/safe-contracts/contracts/interfaces/ISignatureValidator.sol";
 
 contract HyperDAO is ISignatureValidator {
 
-	// TODO: deploy gnosis safe func
-	// TODO: add delegetes && owners
-
     bytes32 private constant DOMAIN_SEPARATOR_TYPEHASH =
         0x7a9f5b2bf4dbb53eb85e012c6094a3d71d76e5bfe821f44ab63ed59311264e35;
     bytes32 private constant MSG_TYPEHASH =
@@ -15,9 +12,7 @@ contract HyperDAO is ISignatureValidator {
 
     mapping(bytes32 => bytes32) public approvedSignatures;
 
-    /* solium-disable */
     mapping(bytes32 => address) public registeredSafe;
-    /* solium-enable */
 
     event SignatureCreated(bytes signature, bytes32 indexed hash);
     event NewDaoRegistered(bytes32 indexed botId, address indexed safe);
