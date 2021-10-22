@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "hardhat": "^2.6.7"
+  },
+  "dependencies": {
+    "@gnosis.pm/safe-apps-sdk": "^5.0.0"
   }
 }
