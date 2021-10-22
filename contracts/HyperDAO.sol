@@ -162,6 +162,6 @@ contract HyperDAO is ISignatureValidator {
         require(_safe != address(0), "Signer: new safe cannot be zero address");
         registeredSafe[_botId] = _safe;
     }
-}
+
 
 }
