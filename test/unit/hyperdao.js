@@ -12,7 +12,10 @@ describe("Contract: HyperDao", async () => {
   let hyperDaoFactoryFactory, hyperDaoInstance, params, safeData, ownersArray;
   let root, owner1, owner2, owner3;
 
-  const CHANNEL_ID = utils.keccak256(-1001741603151);
+  const CHANNEL_ID = -1001741603151;
+  const Bytes32ChannelID = utils.keccak256(
+    utils.arrayify(CHANNEL_ID.toString())
+  );
   const USER_ID = 1001741603151;
   const threshold = 2;
   const nonce = 42;
@@ -51,7 +54,7 @@ describe("Contract: HyperDao", async () => {
     });
     it("succeeds", async () => {
       await hyperDaoInstance.assembleDao(
-        CHANNEL_ID,
+        Bytes32ChannelID,
         ownersArray,
         threshold,
         nonce
