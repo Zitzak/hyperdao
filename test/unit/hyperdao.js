@@ -9,11 +9,13 @@ const getContractInstance = async (factoryName, address, args) => {
 };
 
 describe("Contract: HyperDao", async () => {
-  let hyperDaoFactoryFactory, hyperDaoInstance, params, safeData;
+  let hyperDaoFactoryFactory, hyperDaoInstance, params, safeData, ownersArray;
   let root, owner1, owner2, owner3;
 
   const CHANNEL_ID = BigNumber.from(-1001741603151);
   const USER_ID = 1001741603151;
+  const threshold = 2;
+  const nonce = 42;
   context("deploy new dao", () => {
     before("setup", async () => {
       const signers = await ethers.getSigners();
@@ -33,12 +35,14 @@ describe("Contract: HyperDao", async () => {
 
       safeData = "0x";
 
-      params = [
-        CHANNEL_ID,
-        safeData,
-        [owner1.address, owner2.address, owner3.address],
-      ];
-      console.log("hereh");
+      ownersArray = [owner1.address, owner2.address, owner3.address];
+
+      // params = [
+      //   CHANNEL_ID,
+      //   [owner1.address, owner2.address, owner3.address],
+      //   threshold,
+      //   nonce,
+      // ];
       hyperDaoFactoryFactory = await ethers.getContractFactory("HyperDAO");
       hyperDaoInstance = await hyperDaoFactoryFactory.deploy(
         gnosisSafeInstance.address,
@@ -46,11 +50,14 @@ describe("Contract: HyperDao", async () => {
       );
     });
     it("succeeds", async () => {
-      console.log("hereh1");
+      await hyperDaoInstance.assembleDao(
+        CHANNEL_ID,
+        ownersArray,
+        threshold,
+        nonce
+      ); // this should deploy and also set initial owners for the safe.
 
-      expect(
-        await hyperDaoInstance.connect(root).assembleDao(...params)
-      ).to.equal(true);
+      // await hyperDaoInstance.connect(root).assembleDao(...params);
     });
     console.log("hereh2");
   });
