@@ -5,7 +5,7 @@ import "@gnosis.pm/safe-contracts/contracts/interfaces/ISignatureValidator.sol";
 import "./interface/IGnosisSafeProxyFactory.sol";
 
 contract HyperDAO is ISignatureValidator {
-  GnosisSafeProxy proxy;
+
   address safeMasterCopy;
   address proxyFactoryMasterCopy;
 
