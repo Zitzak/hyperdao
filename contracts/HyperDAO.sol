@@ -33,6 +33,8 @@ contract HyperDAO is ISignatureValidator {
     address[] memory _owners,
     uint256 _threshold
   ) public {
+    require(_threshold != 0,
+        "threshold cannot be 0");
     // create safe through proxy
     address chat = _createNewSafe(_owners, _threshold, uint256(chatID));
     chatToHyperDao[chatID] = chat;
