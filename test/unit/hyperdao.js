@@ -12,7 +12,7 @@ describe("Contract: HyperDao", async () => {
   let hyperDaoFactoryFactory, hyperDaoInstance, params, safeData, ownersArray;
   let root, owner1, owner2, owner3;
 
-  const CHANNEL_ID = BigNumber.from(-1001741603151);
+  const CHANNEL_ID = utils.keccak256(-1001741603151);
   const USER_ID = 1001741603151;
   const threshold = 2;
   const nonce = 42;
@@ -59,6 +59,5 @@ describe("Contract: HyperDao", async () => {
 
       // await hyperDaoInstance.connect(root).assembleDao(...params);
     });
-    console.log("hereh2");
   });
 });
