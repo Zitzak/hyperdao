@@ -41,12 +41,19 @@ describe("Contract: HyperDao", async () => {
       );
     });
     it("succeeds", async () => {
-      const safeAddress = await hyperDaoInstance.assembleDao(
+      const receipt = await hyperDaoInstance.assembleDao(
         CHANNEL_ID,
         ownersArray,
         threshold
       );
-      // console.log(safeAddress);
+
+      console.log(await hyperDaoInstance.chatToHyperDao(CHANNEL_ID));
+
+      // const proxy_addr = receipt.events.filter((data) => {
+      //   return data.event === PROXY_CREATION;
+      // })[0].args["proxy"];
+
+      // console.log(proxy_addr);
     });
   });
 });

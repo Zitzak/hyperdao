@@ -5,7 +5,7 @@ import "@gnosis.pm/safe-contracts/contracts/interfaces/ISignatureValidator.sol";
 import "./interface/IGnosisSafeProxyFactory.sol";
 
 contract HyperDAO is ISignatureValidator {
-  GnosisSafeProxy proxy;
+
   address safeMasterCopy;
   address proxyFactoryMasterCopy;
 
@@ -14,12 +14,11 @@ contract HyperDAO is ISignatureValidator {
   bytes32 private constant MSG_TYPEHASH =
     0xa1a7ad659422d5fc08fdc481fd7d8af8daf7993bc4e833452b0268ceaab66e5d; // mapping for msg typehash
 
-  mapping(bytes32 => address) public registeredSafe;
+  mapping(int => address) public chatToHyperDao;
   mapping(bytes32 => bytes32) public approvedSignatures;
 
   event SignatureCreated(bytes signature, bytes32 indexed hash);
-
-  // event NewDaoRegistered(bytes32 indexed botId, address indexed safe);
+  event HyperDaoAssembled(int256 indexed chatID, address indexed safe);
 
   /**
    * @dev HyperDAO constructor function.
@@ -35,9 +34,10 @@ contract HyperDAO is ISignatureValidator {
     uint256 _threshold
   ) public {
     // create safe through proxy
-    _createNewSafe(_owners, _threshold, uint256(chatID));
-    // TODO: add safe address and channelID to mapping
-    // TODO: add owners to safe
+    address chat = _createNewSafe(_owners, _threshold, uint256(chatID));
+    chatToHyperDao[chatID] = chat;
+
+    emit HyperDaoAssembled(chatID, chat);
   }
 
   // This function need to be implemented in the function above
@@ -80,7 +80,7 @@ contract HyperDAO is ISignatureValidator {
    * @param _nonce          gnosis safe contract nonce.
    */
   function generateSignature(
-    bytes32 _botId,
+    int256 _chatID,
     address _to,
     uint256 _value,
     bytes calldata _data,
@@ -91,7 +91,7 @@ contract HyperDAO is ISignatureValidator {
     uint256 _nonce
   ) external returns (bytes memory signature, bytes32 hash) {
     // check if transaction parameters are correct
-    address currentSafe = registeredSafe[_botId];
+    address currentSafe = chatToHyperDao[_chatID];
 
     // get contractTransactionHash from gnosis safe
     hash = Safe(currentSafe).getTransactionHash(
@@ -193,12 +193,12 @@ contract HyperDAO is ISignatureValidator {
    * @dev                set new safe
    * @param _safe        safe address
    */
-  function setSafe(address _safe, bytes32 _botId) public {
+  function setSafe(address _safe, int256 _chatID) public {
     require(
-      msg.sender == registeredSafe[_botId],
+      msg.sender == chatToHyperDao[_chatID],
       "Signer: only safe functionality"
     );
     require(_safe != address(0), "Signer: new safe cannot be zero address");
-    registeredSafe[_botId] = _safe;
+    chatToHyperDao[_chatID] = _safe;
   }
 }
