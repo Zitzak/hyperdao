@@ -36,11 +36,7 @@ contract HyperDAO is ISignatureValidator {
   ) public {
     // create safe through proxy
     address chat = _createNewSafe(_owners, _threshold, uint256(chatID));
-
     chatToHyperDao[chatID] = chat;
-
-    // TODO: add safe address and channelID to mapping
-    // TODO: add owners to safe
   }
 
   // This function need to be implemented in the function above
