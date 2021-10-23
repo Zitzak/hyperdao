@@ -5,7 +5,6 @@ import "@gnosis.pm/safe-contracts/contracts/interfaces/ISignatureValidator.sol";
 import "./interface/IGnosisSafeProxyFactory.sol";
 
 contract HyperDAO is ISignatureValidator {
-
   address safeMasterCopy;
   address proxyFactoryMasterCopy;
 
@@ -14,7 +13,7 @@ contract HyperDAO is ISignatureValidator {
   bytes32 private constant MSG_TYPEHASH =
     0xa1a7ad659422d5fc08fdc481fd7d8af8daf7993bc4e833452b0268ceaab66e5d; // mapping for msg typehash
 
-  mapping(int => address) public chatToHyperDao;
+  mapping(int256 => address) public chatToHyperDao;
   mapping(bytes32 => bytes32) public approvedSignatures;
 
   event SignatureCreated(bytes signature, bytes32 indexed hash);
