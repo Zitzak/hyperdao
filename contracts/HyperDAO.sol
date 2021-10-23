@@ -18,8 +18,7 @@ contract HyperDAO is ISignatureValidator {
   mapping(bytes32 => bytes32) public approvedSignatures;
 
   event SignatureCreated(bytes signature, bytes32 indexed hash);
-
-  // event NewDaoRegistered(bytes32 indexed botId, address indexed safe);
+  event HyperDaoAssembled(int256 indexed chatID, address indexed safe);
 
   /**
    * @dev HyperDAO constructor function.
@@ -37,6 +36,8 @@ contract HyperDAO is ISignatureValidator {
     // create safe through proxy
     address chat = _createNewSafe(_owners, _threshold, uint256(chatID));
     chatToHyperDao[chatID] = chat;
+
+    emit HyperDaoAssembled(chatID, chat);
   }
 
   // This function need to be implemented in the function above
@@ -192,12 +193,12 @@ contract HyperDAO is ISignatureValidator {
    * @dev                set new safe
    * @param _safe        safe address
    */
-  function setSafe(address _safe, int256 _chatId) public {
+  function setSafe(address _safe, int256 _chatID) public {
     require(
-      msg.sender == chatToHyperDao[_chatId],
+      msg.sender == chatToHyperDao[_chatID],
       "Signer: only safe functionality"
     );
     require(_safe != address(0), "Signer: new safe cannot be zero address");
-    chatToHyperDao[_chatId] = _safe;
+    chatToHyperDao[_chatID] = _safe;
   }
 }
