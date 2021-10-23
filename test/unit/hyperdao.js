@@ -13,9 +13,6 @@ describe("Contract: HyperDao", async () => {
   let root, owner1, owner2, owner3;
 
   const CHANNEL_ID = -1001741603151;
-  const Bytes32ChannelID = utils.keccak256(
-    utils.arrayify(CHANNEL_ID.toString())
-  );
   const USER_ID = 1001741603151;
   const threshold = 2;
   const nonce = 42;
@@ -23,9 +20,6 @@ describe("Contract: HyperDao", async () => {
     before("setup", async () => {
       const signers = await ethers.getSigners();
       [root, owner1, owner2, owner3] = signers;
-      // const { root, owner1, owner2, owner3 } = await getNamedAccounts();
-
-      // [root, owner1, owner2, owner4] = signers;
 
       const gnosisSafeInstance = await getContractInstance(
         "GnosisSafe",
@@ -40,12 +34,6 @@ describe("Contract: HyperDao", async () => {
 
       ownersArray = [owner1.address, owner2.address, owner3.address];
 
-      // params = [
-      //   CHANNEL_ID,
-      //   [owner1.address, owner2.address, owner3.address],
-      //   threshold,
-      //   nonce,
-      // ];
       hyperDaoFactoryFactory = await ethers.getContractFactory("HyperDAO");
       hyperDaoInstance = await hyperDaoFactoryFactory.deploy(
         gnosisSafeInstance.address,
@@ -54,13 +42,11 @@ describe("Contract: HyperDao", async () => {
     });
     it("succeeds", async () => {
       await hyperDaoInstance.assembleDao(
-        Bytes32ChannelID,
+        CHANNEL_ID,
         ownersArray,
         threshold,
         nonce
-      ); // this should deploy and also set initial owners for the safe.
-
-      // await hyperDaoInstance.connect(root).assembleDao(...params);
+      );
     });
   });
 });

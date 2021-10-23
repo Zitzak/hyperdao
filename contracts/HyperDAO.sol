@@ -30,7 +30,7 @@ contract HyperDAO is ISignatureValidator {
   }
 
   function assembleDao(
-    bytes32 chatID,
+    int256 chatID,
     address[] memory _owners,
     uint256 _threshold,
     uint256 nonce
