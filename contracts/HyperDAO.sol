@@ -6,30 +6,39 @@ import "./interface/IGnosisSafeProxyFactory.sol";
 
 contract HyperDAO is ISignatureValidator {
 
+    address safeMasterCopy;
+    address proxyFactoryMasterCopy;
+
     bytes32 private constant DOMAIN_SEPARATOR_TYPEHASH =
         0x7a9f5b2bf4dbb53eb85e012c6094a3d71d76e5bfe821f44ab63ed59311264e35;
     bytes32 private constant MSG_TYPEHASH =
         0xa1a7ad659422d5fc08fdc481fd7d8af8daf7993bc4e833452b0268ceaab66e5d; // mapping for msg typehash
 
-
+    mapping(bytes32 => address) public registeredSafe;
     mapping(bytes32 => bytes32) public approvedSignatures;
 
-    mapping(bytes32 => address) public registeredSafe;
-
     event SignatureCreated(bytes signature, bytes32 indexed hash);
-    event NewDaoRegistered(bytes32 indexed botId, address indexed safe);
+    // event NewDaoRegistered(bytes32 indexed botId, address indexed safe);
 
+    /**
+     * @dev HyperDAO constructor function.
+     */
+    constructor(address _safeMasterCopy, address _proxyFactoryMasterCopy)
+    {
+        safeMasterCopy = _safeMasterCopy;
+        proxyFactoryMasterCopy = _proxyFactoryMasterCopy;
+    }
 
-    function initializeDao(bytes memory safeData, address[] memory owners, bytes channelID) {
+    function assembleDao(bytes32 chatID, bytes memory safeData, address[] memory owners) public {
 
-        // TODO: create safe through proxy (see function below)
+        // create safe through proxy
+        _createNewSafe(safeData);
         // TODO: add safe address and channelID to mapping
         // TODO: add owners to safe
-
     }
 
     // This function need to be implemented in the function above
-    function createNewSafe(address safeMasterCopy, address proxyFactoryMasterCopy, bytes memory data) public {
+    function _createNewSafe(bytes memory data) internal {
         IGnosisSafeProxyFactory(proxyFactoryMasterCopy).createProxy(safeMasterCopy, data);
     }
 
