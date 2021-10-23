@@ -1,6 +1,8 @@
 const { expect } = require("chai");
 const { ethers, deployments } = require("hardhat");
 const { utils, BigNumber } = require("ethers");
+const { getContractFactory } = require("@nomiclabs/hardhat-ethers/types");
+const GnosisSafeArtifact = require("GnosisSafe");
 
 const getContractInstance = async (factoryName, address, args) => {
   const Factory = await ethers.getContractFactory(factoryName, address);
@@ -11,6 +13,7 @@ const getContractInstance = async (factoryName, address, args) => {
 describe("Contract: HyperDao", async () => {
   let hyperDaoFactoryFactory, hyperDaoInstance, params, safeData, ownersArray;
   let root, owner1, owner2, owner3;
+  let gnosisSafeInstance, gnosisSafeProxyInstance, gnosisSafeContractFactory;
 
   const CHANNEL_ID = -1001741603151;
   const USER_ID = 1001741603151;
@@ -21,11 +24,19 @@ describe("Contract: HyperDao", async () => {
       const signers = await ethers.getSigners();
       [root, owner1, owner2, owner3] = signers;
 
-      const gnosisSafeInstance = await getContractInstance(
+      gnosisSafeInstance = await getContractInstance(
         "GnosisSafe",
         root.address
       );
-      const gnosisSafeProxyInstance = await getContractInstance(
+      // gnosisSafeContractFactory = new ethers.ContractFactory(
+      //   GnosisSafeArtifact.abi,
+      //   GnosisSafeArtifact.bytecode,
+      //   root
+      // );
+
+      gnosisSafeContractFactory = await ethers.getContractFactory("GnosisSafe");
+
+      gnosisSafeProxyInstance = await getContractInstance(
         "GnosisSafeProxyFactory",
         root.address
       );
@@ -54,6 +65,10 @@ describe("Contract: HyperDao", async () => {
       // })[0].args["proxy"];
 
       // console.log(proxy_addr);
+      const hyperGnosisSafe = await gnosisSafeContractFactory.attach(
+        safeAddress
+      );
+      // console.log(safeAddress);
     });
   });
 });
