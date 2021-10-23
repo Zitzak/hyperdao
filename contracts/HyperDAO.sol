@@ -30,17 +30,21 @@ contract HyperDAO is ISignatureValidator {
         proxyFactoryMasterCopy = _proxyFactoryMasterCopy;
     }
 
-    function assembleDao(bytes32 chatID, bytes memory safeData, address[] memory owners) public {
+    function assembleDao(bytes32 chatID, address[] memory _owners, uint256 _threshold, uint256 nonce) public {
 
         // create safe through proxy
-        _createNewSafe(safeData);
+        _createNewSafe(_owners, _threshold, nonce);
         // TODO: add safe address and channelID to mapping
         // TODO: add owners to safe
     }
 
     // This function need to be implemented in the function above
-    function _createNewSafe(bytes memory data) internal {
-        proxy = IGnosisSafeProxyFactory(proxyFactoryMasterCopy).createProxy(safeMasterCopy, data);
+    // minimal, to add new owners at the time of creating a new Gnosis Safe
+    function _createNewSafe(address[] memory _owners, uint256 _threshold, uint256 nonce) internal returns(address) {
+        bytes memory initializer = abi.encodeWithSignature(
+            "setup(address[],uint256,address,bytes,address,address,uint256,address)"
+            ,_owners, _threshold, address(0), "0x", address(0), address(0), 0, address(0));
+        return address(IGnosisSafeProxyFactory(proxyFactoryMasterCopy).createProxyWithNonce(safeMasterCopy, initializer, nonce));
     }
 
     /**
