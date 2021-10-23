@@ -32,11 +32,10 @@ contract HyperDAO is ISignatureValidator {
   function assembleDao(
     int256 chatID,
     address[] memory _owners,
-    uint256 _threshold,
-    uint256 nonce
+    uint256 _threshold
   ) public {
     // create safe through proxy
-    _createNewSafe(_owners, _threshold, nonce);
+    _createNewSafe(_owners, _threshold, uint256(chatID));
     // TODO: add safe address and channelID to mapping
     // TODO: add owners to safe
   }

@@ -41,12 +41,12 @@ describe("Contract: HyperDao", async () => {
       );
     });
     it("succeeds", async () => {
-      await hyperDaoInstance.assembleDao(
+      const safeAddress = await hyperDaoInstance.assembleDao(
         CHANNEL_ID,
         ownersArray,
-        threshold,
-        nonce
+        threshold
       );
+      // console.log(safeAddress);
     });
   });
 });
