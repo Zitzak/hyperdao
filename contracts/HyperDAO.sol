@@ -6,8 +6,9 @@ import "./interface/IGnosisSafeProxyFactory.sol";
 
 contract HyperDAO is ISignatureValidator {
 
-    address safeMasterCopy;
-    address proxyFactoryMasterCopy;
+    GnosisSafeProxy proxy;
+    address         safeMasterCopy;
+    address         proxyFactoryMasterCopy;
 
     bytes32 private constant DOMAIN_SEPARATOR_TYPEHASH =
         0x7a9f5b2bf4dbb53eb85e012c6094a3d71d76e5bfe821f44ab63ed59311264e35;
@@ -39,7 +40,7 @@ contract HyperDAO is ISignatureValidator {
 
     // This function need to be implemented in the function above
     function _createNewSafe(bytes memory data) internal {
-        IGnosisSafeProxyFactory(proxyFactoryMasterCopy).createProxy(safeMasterCopy, data);
+        proxy = IGnosisSafeProxyFactory(proxyFactoryMasterCopy).createProxy(safeMasterCopy, data);
     }
 
     /**
