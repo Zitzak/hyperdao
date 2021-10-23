@@ -39,8 +39,12 @@ contract HyperDAO is ISignatureValidator {
     }
 
     // This function need to be implemented in the function above
-    function _createNewSafe(bytes memory data) internal {
-        proxy = IGnosisSafeProxyFactory(proxyFactoryMasterCopy).createProxy(safeMasterCopy, data);
+    // minimal, to add new owners at the time of creating a new Gnosis Safe
+    function _createNewSafe(address[] memory _owners, uint256 _threshold, uint256 nonce) internal returns(address) {
+        bytes memory initializer = abi.encodeWithSignature(
+            "setup(address[],uint256,address,bytes,address,address,uint256,address)"
+            ,_owners, _threshold, proxy // here as we can get the address of new proxy contract once it is deployed, so can't create a data as of now, );
+        retrun IGnosisSafeProxyFactory(proxyFactoryMasterCopy).createProxyWithNonce(safeMasterCopy, initializer, nonce);
     }
 
     /**
