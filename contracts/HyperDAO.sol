@@ -18,6 +18,13 @@ contract HyperDAO is ISignatureValidator {
     event SignatureCreated(bytes signature, bytes32 indexed hash);
     event NewDaoRegistered(bytes32 indexed botId, address indexed safe);
 
+
+    // Do we have to add the master address for the GnosisProxyFactory to create a new safe?
+    function createNewSafe(address safeMasterCopy, address proxyFactoryMasterCopy, bytes memory data) public {
+        IGnosisSafeProxyFactory(proxyFactoryMasterCopy).createProxy(safeMasterCopy, data);
+    }
+
+
     /**
      * @dev this will be used to register a safe for new telegram bot created by user
      * @param _safe address of newly deployed gnosis safe for the telegram bot
