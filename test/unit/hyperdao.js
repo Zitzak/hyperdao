@@ -1,8 +1,6 @@
 const { expect } = require("chai");
 const { ethers, deployments } = require("hardhat");
 const { utils, BigNumber } = require("ethers");
-const { getContractFactory } = require("@nomiclabs/hardhat-ethers/types");
-const GnosisSafeArtifact = require("GnosisSafe");
 
 const getContractInstance = async (factoryName, address, args) => {
   const Factory = await ethers.getContractFactory(factoryName, address);
@@ -16,9 +14,7 @@ describe("Contract: HyperDao", async () => {
   let gnosisSafeInstance, gnosisSafeProxyInstance, gnosisSafeContractFactory;
 
   const CHANNEL_ID = -1001741603151;
-  const USER_ID = 1001741603151;
   const threshold = 2;
-  const nonce = 42;
   context("deploy new dao", () => {
     before("setup", async () => {
       const signers = await ethers.getSigners();
@@ -28,11 +24,6 @@ describe("Contract: HyperDao", async () => {
         "GnosisSafe",
         root.address
       );
-      // gnosisSafeContractFactory = new ethers.ContractFactory(
-      //   GnosisSafeArtifact.abi,
-      //   GnosisSafeArtifact.bytecode,
-      //   root
-      // );
 
       gnosisSafeContractFactory = await ethers.getContractFactory("GnosisSafe");
 
@@ -52,23 +43,17 @@ describe("Contract: HyperDao", async () => {
       );
     });
     it("succeeds", async () => {
-      const receipt = await hyperDaoInstance.assembleDao(
-        CHANNEL_ID,
-        ownersArray,
-        threshold
-      );
+      await hyperDaoInstance.assembleDao(CHANNEL_ID, ownersArray, threshold);
 
-      console.log(await hyperDaoInstance.chatToHyperDao(CHANNEL_ID));
+      safeAddress = await hyperDaoInstance.chatToHyperDao(CHANNEL_ID);
 
-      // const proxy_addr = receipt.events.filter((data) => {
-      //   return data.event === PROXY_CREATION;
-      // })[0].args["proxy"];
-
-      // console.log(proxy_addr);
       const hyperGnosisSafe = await gnosisSafeContractFactory.attach(
         safeAddress
       );
-      // console.log(safeAddress);
+
+      expect(await hyperGnosisSafe.isOwner(owner1.address));
+      expect(await hyperGnosisSafe.isOwner(owner2.address));
+      expect(await hyperGnosisSafe.isOwner(owner3.address));
     });
   });
 });
